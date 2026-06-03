@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct{int u,v,w;}Edge;
+int parent[100];
+
+int find(int i){if(parent[i]==i)return i;return parent[i]=find(parent[i]);}
+void unionSet(int u,int v){parent[find(u)]=find(v);}
+
+int cmp(const void* a,const void* b){return ((Edge*)a)->w-((Edge*)b)->w;}
+
+int main(){
+    int n,m;
+    printf("Enter number of vertices and edges: ");
+    scanf("%d %d",&n,&m);
+    Edge edges[m];
+    printf("Enter edges (u v w):\n");
+    for(int i=0;i<m;i++)scanf("%d %d %d",&edges[i].u,&edges[i].v,&edges[i].w);
+    qsort(edges,m,sizeof(Edge),cmp);
+    for(int i=0;i<n;i++)parent[i]=i;
+    printf("Edge   Weight\n");
+    int count=0;
+    for(int i=0;i<m && count<n-1;i++){
+        int u=edges[i].u,v=edges[i].v;
+        if(find(u)!=find(v)){
+            printf("%d - %d    %d\n",u,v,edges[i].w);
+            unionSet(u,v);
+            count++;
+        }
+    }
+    return 0;
+}
